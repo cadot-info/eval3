@@ -1,0 +1,20 @@
+# docker-compose.yml
+version: '3'
+
+services:
+  eval3:
+    image: cadotinfo/symfony5
+    container_name: eval3
+    volumes:
+      - .:/app
+    networks:
+      - web
+    restart: always
+    labels:
+        - "traefik.enable=true"
+    ports:
+      - 80
+
+networks:
+  web:
+    external: true

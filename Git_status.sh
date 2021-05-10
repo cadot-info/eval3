@@ -1,0 +1,13 @@
+cd patch/patch_crud
+git status
+cd ../../src/Twig
+git status
+cd ../Command
+git status
+cd ../Service
+git status
+cd ../Validator
+git status
+cd ../Form/Type
+git status
+cd ..
