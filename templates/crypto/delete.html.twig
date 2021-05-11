@@ -1,15 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-{% set action=path(app.request.attributes.get('_route'),
-app.request.attributes.get('_route_params'))|split('/')|last
-%}
-{{action}} Crypto{% endblock %}
+{% block title %}Supression de Crypto{% endblock %}
 
 {% block body %}
-{% set action=path(app.request.attributes.get('_route'),
-app.request.attributes.get('_route_params'))|split('/')|last
-%}
+
 <div class="row py-2 px-3">
     <div class="col-1 nav-button">
         <a href="/"> <i class="fas fa-times"></i></a>
@@ -26,24 +20,16 @@ app.request.attributes.get('_route_params'))|split('/')|last
     <div class="col-12 mt-5">
         {{ form_widget(form.quantite,{'attr':{'placeholder':'Quantité','class':'input-add'}}) }}
     </div>
-    <div class="col-12 mt-5">
-        {{ form_widget(form.prix_achat,{'attr':{'placeholder':'Prix d achat','class':'input-add'}}) }}
-    </div>
-
-
 </div>
 <div class="row mt-5">
     <div class="col-12 mt-5 text-center">
         <button class="btn px-5 py-2">
-            {% if action=='new' %}
-            Ajouter
-            {% else %}
-            Modifier
-            {% endif %}
+            Supprimer
         </button>
     </div>
 </div>
-
+ {{ form_widget(form.prix_achat,{'attr':{'hidden':true}}) }}
+ <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ crypto.id) }}">
 
 {{ form_end(form) }}
 

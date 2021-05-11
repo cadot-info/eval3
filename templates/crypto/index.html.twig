@@ -7,48 +7,64 @@
     <div class="col-10 nav-titre ">
         crypto tracker
     </div>
-    <div class="col-1 nav-button">
-        <i class="fas fa-pen    "></i>
+    <div class="col-1 nav-button ">
+        <a data-toggle="collapse" href="#symbols" aria-expanded="false" aria-controls="contentId"><i
+                class="fas fa-pen "></i></a>
+
+
     </div>
     <div class="col-1 nav-button">
-        <i class="fas fa-plus    "></i>
+        <a href="{{ path('crypto_new') }}"><i class="fas fa-plus "></i></a>
+    </div>
+    <div class="collapse absolute col-12 text-right" id="symbols">
+        {% for crypto in cryptos %}
+        {{crypto.symbol}}
+        <a href="{{ path('crypto_edit', {'id': crypto.id}) }}">
+            <i class="fas fa-pen    "></i>
+        </a>
+        <a href="{{ path('crypto_delete', {'id': crypto.id}) }}">
+            <i class="fas fa-trash    "></i>
+        </a>
+        <br />
+        {% endfor %}
     </div>
 </div>
 <div class="col-12 total text-center">
-    {% if total>0 %}
+    {% if total.total>0 %}
     +
-    {% endif %} {{(total)|number_format(2)}} €
+    {% endif %} {{(total.total)|number_format(2,'.',' ')}} €
 </div>
+{% for crypto in cryptos %}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Symbol</th>
-            <th>Quantite</th>
-            <th>Prix_achat</th>
-            <th>actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for crypto in cryptos %}
-        <tr>
-            <td>{{ crypto.id }}</td>
-            <td>{{ crypto.symbol }}</td>
-            <td>{{ crypto.quantite }}</td>
-            <td>{{ crypto.prixAchat }}</td>
-            <td>
-                <a href="{{ path('crypto_show', {'id': crypto.id}) }}">show</a>
-                <a href="{{ path('crypto_edit', {'id': crypto.id}) }}">edit</a>
-            </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="5">no records found</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row px-5 ">
+    <div class="col-2">
+        <img src="{{asset('build/icons/'~crypto.symbol|lower~'.png')}}">
+    </div>
+    <div class="col-9 my-auto">
+        {{crypto.symbol}}({{total.data[crypto.symbol].name}})
+    </div>
+    <div class="col-1 my-auto">
+        {% set change = total.data[crypto.symbol].quote['EUR'].percent_change_24h %}
+        {% set icone = asset('build/img/fleche.png') %}
+        {% if change < 0 %} {% set icon='<img src="' ~icone~'" style=" -webkit-transform: scaleY(-1);
+  transform: scaleY(-1);"></img>' %}
+            {% else %}
+            {% set icon = '<img src="'~icone~'"></img>' %}
+            {% endif %}
+            {{icon|raw}}
+            {% if change|abs>5 %}
+            {{icon|raw}}
+            {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <hr>
+    </div>
+</div>
+{% endfor %}
 
-<a href="{{ path('crypto_new') }}">Create new</a>
+
+
+
 {% endblock %}

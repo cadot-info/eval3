@@ -30,7 +30,7 @@ class CryptoController extends AbstractController
      */
     public function index(CryptoRepository $cryptoRepository): Response
     {
-
+        dump($this->get_total());
         return $this->render('crypto/index.html.twig', [
             'cryptos' => $cryptoRepository->findAll(),
             'total' => $this->get_total()
@@ -66,7 +66,7 @@ class CryptoController extends AbstractController
     public function save_crypto(): Response
     {
         try {
-            $total = $this->get_total();
+            $total = $this->get_total()['total'];
             $resultat = new Resultat();
             $resultat->setValeur($total);
             $resultat->setDate(new DateTime());
@@ -107,25 +107,35 @@ class CryptoController extends AbstractController
             return $this->redirectToRoute('crypto_index');
         }
 
-        return $this->render('crypto/edit.html.twig', [
+        return $this->render('crypto/new.html.twig', [
+            'crypto' => $crypto,
+            'form' => $form->createView(),
+        ]);
+    }
+    /**
+     * @Route("/{id}/delete", name="crypto_delete", methods={"GET","POST"})
+     */
+    public function delete(Request $request, Crypto $crypto): Response
+    {
+        $form = $this->createForm(CryptoType::class, $crypto);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->isCsrfTokenValid('delete' . $crypto->getId(), $request->request->get('_token'))) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($crypto);
+                $entityManager->flush();
+            } else dd('erreur cr');
+
+            return $this->redirectToRoute('crypto_index');
+        }
+
+        return $this->render('crypto/delete.html.twig', [
             'crypto' => $crypto,
             'form' => $form->createView(),
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="crypto_delete", methods={"POST"})
-     */
-    public function delete(Request $request, Crypto $crypto): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $crypto->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($crypto);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('crypto_index');
-    }
 
     /**
      * Method get_total
@@ -163,16 +173,16 @@ class CryptoController extends AbstractController
         ));
 
         $response = curl_exec($curl); // Send the request, save the response
-        $resultats = json_decode($response);
+        $resultats = json_decode($response, true);
         curl_close($curl); // Close request
         //get all for amount of day
         $total = 0;
-        $data = (array)$resultats->data;
+        $data = $resultats['data'];
         foreach ($this->cryptoRepository->findAll() as $symbol) {
-            $valeur_actuelle = $data[$symbol->getSymbol()]->quote->EUR->price;
+            $valeur_actuelle = $data[$symbol->getSymbol()]['quote']['EUR']['price'];
             $total +=   $symbol->getQuantite() * ($valeur_actuelle - $symbol->getPrixAchat());
         }
-        $total = 123;
-        return $total;
+        $resultats['total'] = $total;
+        return $resultats;
     }
 }

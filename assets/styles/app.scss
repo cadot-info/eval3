@@ -4,9 +4,11 @@
 $roboto: 'Roboto',
 serif;
 
+$clair:#efefef;
+
 body {
     background-color: black;
-    color: white;
+    color: $clair;
 }
 
 .nav {
@@ -27,4 +29,28 @@ body {
 .total {
     font-family: $roboto;
     font-size: 4rem;
+}
+
+hr {
+    border-top: 1px solid rgba(255, 255, 255, .5);
+}
+
+a {
+    color: $clair;
+}
+
+.input-add {
+    width: 100%;
+    min-height: 4rem;
+    background-color: black;
+    border: 1px solid $clair;
+    color: $clair;
+}
+
+.btn {
+    color: black;
+    padding: 7px;
+    background-color: grey;
+    font-size: 2rem;
+    font-family: $roboto;
 }

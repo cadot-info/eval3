@@ -13,7 +13,14 @@ Encore
     .setPublicPath('/build')
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
-
+    .copyFiles({
+        from: './node_modules/cryptocurrency-icons/32/color',
+        to: 'icons/[path][name].[hash:8].[ext]'
+    })
+    .copyFiles({
+        from: './assets/img',
+        to: 'img/[path][name].[hash:8].[ext]'
+    })
     /*
      * ENTRY CONFIG
      *
