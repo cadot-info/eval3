@@ -18,6 +18,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CryptoController extends AbstractController
 {
+    protected $cryptoRepository;
+
+    public function __construct(CryptoRepository $cryptoRepository)
+    {
+        $this->cryptoRepository = $cryptoRepository;
+    }
+
     /**
      * @Route("/", name="crypto_index", methods={"GET"})
      */
@@ -25,7 +32,8 @@ class CryptoController extends AbstractController
     {
 
         return $this->render('crypto/index.html.twig', [
-            'cryptos' => $cryptoRepository->findAll()
+            'cryptos' => $cryptoRepository->findAll(),
+            'total' => $this->get_total()
         ]);
     }
 
@@ -55,47 +63,10 @@ class CryptoController extends AbstractController
      * @Route("/save_crypto", name="crypto_save", methods={"GET"})
      * function for call by cron, nodejs... for save the total of symbol for current day
      */
-    public function save_crypto(CryptoRepository $cryptoRepository): Response
+    public function save_crypto(): Response
     {
         try {
-            //contains symbols commas
-            $symbols = [];
-            //loop for read symbols of bd
-            foreach ($cryptoRepository->findAll() as $symbol) {
-                $symbols[] = ($symbol->getsymbol());
-            }
-            $url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest';
-            $parameters = [
-                'convert' => 'EUR',
-                'symbol' => implode(',', $symbols)
-            ];
-
-            $headers = [
-                'Accepts: application/json',
-                'X-CMC_PRO_API_KEY: ' . $_ENV['COINMARKETCAP']
-            ];
-            $qs = http_build_query($parameters); // query string encode the parameters
-            $request = "{$url}?{$qs}"; // create the request URL
-
-
-            $curl = curl_init(); // Get cURL resource
-            // Set cURL options
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $request,            // set the request URL
-                CURLOPT_HTTPHEADER => $headers,     // set the headers 
-                CURLOPT_RETURNTRANSFER => 1         // ask for raw response instead of bool
-            ));
-
-            $response = curl_exec($curl); // Send the request, save the response
-            $resultats = json_decode($response);
-            curl_close($curl); // Close request
-            //get all for amount of day
-            $total = 0;
-            $data = (array)$resultats->data;
-            foreach ($cryptoRepository->findAll() as $symbol) {
-                $valeur_actuelle = $data[$symbol->getSymbol()]->quote->EUR->price;
-                $total +=   $symbol->getQuantite() * ($valeur_actuelle - $symbol->getPrixAchat());
-            }
+            $total = $this->get_total();
             $resultat = new Resultat();
             $resultat->setValeur($total);
             $resultat->setDate(new DateTime());
@@ -110,6 +81,7 @@ class CryptoController extends AbstractController
             return new JsonResponse('Error:' . $th->getMessage(), 500);
         }
     }
+
 
     /**
      * @Route("/{id}", name="crypto_show", methods={"GET"})
@@ -153,5 +125,54 @@ class CryptoController extends AbstractController
         }
 
         return $this->redirectToRoute('crypto_index');
+    }
+
+    /**
+     * Method get_total
+     *
+     * @return integer total of value in wallet with actual value
+     */
+    public function get_total()
+    {
+        //contains symbols commas
+        $symbols = [];
+        //loop for read symbols of bd
+        foreach ($this->cryptoRepository->findAll() as $symbol) {
+            $symbols[] = ($symbol->getsymbol());
+        }
+        $url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest';
+        $parameters = [
+            'convert' => 'EUR',
+            'symbol' => implode(',', $symbols)
+        ];
+
+        $headers = [
+            'Accepts: application/json',
+            'X-CMC_PRO_API_KEY: ' . $_ENV['COINMARKETCAP']
+        ];
+        $qs = http_build_query($parameters); // query string encode the parameters
+        $request = "{$url}?{$qs}"; // create the request URL
+
+
+        $curl = curl_init(); // Get cURL resource
+        // Set cURL options
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $request,            // set the request URL
+            CURLOPT_HTTPHEADER => $headers,     // set the headers 
+            CURLOPT_RETURNTRANSFER => 1         // ask for raw response instead of bool
+        ));
+
+        $response = curl_exec($curl); // Send the request, save the response
+        $resultats = json_decode($response);
+        curl_close($curl); // Close request
+        //get all for amount of day
+        $total = 0;
+        $data = (array)$resultats->data;
+        foreach ($this->cryptoRepository->findAll() as $symbol) {
+            $valeur_actuelle = $data[$symbol->getSymbol()]->quote->EUR->price;
+            $total +=   $symbol->getQuantite() * ($valeur_actuelle - $symbol->getPrixAchat());
+        }
+        $total = 123;
+        return $total;
     }
 }
