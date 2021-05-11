@@ -13,11 +13,10 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
-        $url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest';
+        $url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest';
         $parameters = [
-            'start' => '1',
-            'limit' => '5000',
-            'convert' => 'USD'
+            'convert' => 'USD',
+            'symbol' => 'ETH,BTC'
         ];
 
         $headers = [
@@ -37,9 +36,11 @@ class HomeController extends AbstractController
         ));
 
         $response = curl_exec($curl); // Send the request, save the response
-        print_r(json_decode($response)); // print json decoded response
+        $resultats = json_decode($response);
         curl_close($curl); // Close request
-
+        dd(
+            json_decode($response)
+        );
 
 
 
