@@ -2,16 +2,19 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Crypto;
 use App\Entity\Resultat;
 use App\Form\CryptoType;
+use Symfony\UX\Chartjs\Model\Chart;
 use App\Repository\CryptoRepository;
-use DateTime;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\ResultatRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("")
@@ -28,11 +31,33 @@ class CryptoController extends AbstractController
     /**
      * @Route("/", name="crypto_index", methods={"GET"})
      */
-    public function index(CryptoRepository $cryptoRepository): Response
+    public function index(ChartBuilderInterface $chartBuilder, CryptoRepository $cryptoRepository, ResultatRepository $resultats): Response
     {
+        $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
+        $dat = [];
+        $val = [];
+        foreach ($resultats->findAll() as $key => $value) {
+            $dat[] = $value->getDate()->format('d-m-Y');
+            $val[] = $value->getValeur();
+        }
+
+        $chart->setData([
+            'labels' => $dat,
+            'datasets' => [
+                [
+                    'label' => 'Vos gains',
+                    'backgroundColor' => 'rgb(0, 0, 0)',
+                    'borderColor' => 'rgb(31,195,108)',
+                    'data' => $val,
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([/* ... */]);
         return $this->render('crypto/index.html.twig', [
             'cryptos' => $cryptoRepository->findAll(),
-            'total' => $this->get_total()
+            'total' => $this->get_total(),
+            'chart' => $chart,
         ]);
     }
 
