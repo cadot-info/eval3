@@ -6,6 +6,7 @@ use App\Entity\Crypto;
 use App\Entity\Resultat;
 use App\Form\CryptoType;
 use App\Repository\CryptoRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -95,7 +96,8 @@ class CryptoController extends AbstractController
                 $total +=   $symbol->getQuantite() * ($valeur_actuelle - $symbol->getPrixAchat());
             }
             $resultat = new Resultat();
-            $resultat->getValeur($total);
+            $resultat->setValeur($total);
+            $resultat->setDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($resultat);
             $entityManager->flush();
