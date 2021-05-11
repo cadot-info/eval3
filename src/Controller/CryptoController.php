@@ -53,6 +53,7 @@ class CryptoController extends AbstractController
     }
     /**
      * @Route("/save_crypto", name="crypto_save", methods={"GET"})
+     * function for call by cron, nodejs... for save the total of symbol for current day
      */
     public function save_crypto(CryptoRepository $cryptoRepository): Response
     {
