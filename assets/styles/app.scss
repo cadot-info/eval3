@@ -1,3 +1,27 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900");
+
+// Font Variables
+$roboto: 'Roboto',
+serif;
+
 body {
-    background-color: lightgray;
+    background-color: black;
+    color: white;
+}
+
+.nav {
+
+
+    &-titre {
+        font-family: $roboto;
+        text-transform: capitalize;
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    &-button {
+        font-size: 1.5rem;
+    }
+
+
 }

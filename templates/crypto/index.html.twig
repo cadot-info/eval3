@@ -3,40 +3,47 @@
 {% block title %}Crypto index{% endblock %}
 
 {% block body %}
-<div class="col-12">
+
+<div class="col-10 nav-titre">
+    crypto tracker
+</div>
+<div class="col-1 nav-button">
+    <i class="fas fa-pen    "></i>
+</div>
+<div class="col-1 nav-button">
+    <i class="fas fa-plus    "></i>
 </div>
 
-    <h1>Crypto index <i class="bi bi-plus-circle"></i><i class="fas fa-plus-circle"></i></h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Symbol</th>
-                <th>Quantite</th>
-                <th>Prix_achat</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Symbol</th>
+            <th>Quantite</th>
+            <th>Prix_achat</th>
+            <th>actions</th>
+        </tr>
+    </thead>
+    <tbody>
         {% for crypto in cryptos %}
-            <tr>
-                <td>{{ crypto.id }}</td>
-                <td>{{ crypto.symbol }}</td>
-                <td>{{ crypto.quantite }}</td>
-                <td>{{ crypto.prixAchat }}</td>
-                <td>
-                    <a href="{{ path('crypto_show', {'id': crypto.id}) }}">show</a>
-                    <a href="{{ path('crypto_edit', {'id': crypto.id}) }}">edit</a>
-                </td>
-            </tr>
+        <tr>
+            <td>{{ crypto.id }}</td>
+            <td>{{ crypto.symbol }}</td>
+            <td>{{ crypto.quantite }}</td>
+            <td>{{ crypto.prixAchat }}</td>
+            <td>
+                <a href="{{ path('crypto_show', {'id': crypto.id}) }}">show</a>
+                <a href="{{ path('crypto_edit', {'id': crypto.id}) }}">edit</a>
+            </td>
+        </tr>
         {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
+        <tr>
+            <td colspan="5">no records found</td>
+        </tr>
         {% endfor %}
-        </tbody>
-    </table>
+    </tbody>
+</table>
 
-    <a href="{{ path('crypto_new') }}">Create new</a>
+<a href="{{ path('crypto_new') }}">Create new</a>
 {% endblock %}

@@ -7,7 +7,8 @@ import "bootstrap/dist/css/bootstrap.css";
 
 import './styles/app.scss';
 $('[data-toggle="popover"]').popover();
+require('@fortawesome/fontawesome-free/css/all.min.css');
+require('@fortawesome/fontawesome-free/js/all.js');
 
 // start the Stimulus application
 import './bootstrap';
-import('bootstrap-icons/font/bootstrap-icons.css');
