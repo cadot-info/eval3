@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210511055414 extends AbstractMigration
+final class Version20210511070741 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,11 +21,15 @@ final class Version20210511055414 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE crypto (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, symbol VARCHAR(5) NOT NULL, quantite INTEGER NOT NULL, prix_achat INTEGER NOT NULL)');
+        $this->addSql('CREATE TABLE resultat (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, date DATE NOT NULL, valeur INTEGER NOT NULL)');
+        $this->addSql('DROP TABLE resultats');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE resultats (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, date DATE NOT NULL, valeur INTEGER NOT NULL)');
         $this->addSql('DROP TABLE crypto');
+        $this->addSql('DROP TABLE resultat');
     }
 }
