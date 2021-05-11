@@ -30,7 +30,6 @@ class CryptoController extends AbstractController
      */
     public function index(CryptoRepository $cryptoRepository): Response
     {
-        dump($this->get_total());
         return $this->render('crypto/index.html.twig', [
             'cryptos' => $cryptoRepository->findAll(),
             'total' => $this->get_total()
@@ -125,7 +124,7 @@ class CryptoController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($crypto);
                 $entityManager->flush();
-            } else dd('erreur cr');
+            }
 
             return $this->redirectToRoute('crypto_index');
         }
