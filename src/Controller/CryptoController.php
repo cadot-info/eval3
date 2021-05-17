@@ -97,10 +97,7 @@ class CryptoController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($resultat);
             $entityManager->flush();
-            return new JsonResponse(
-                'Save ended',
-                200
-            );
+            return $this->redirectToRoute('crypto_index');
         } catch (\Throwable $th) {
             return new JsonResponse('Error:' . $th->getMessage(), 500);
         }
