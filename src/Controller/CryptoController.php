@@ -54,6 +54,9 @@ class CryptoController extends AbstractController
         ]);
 
         $chart->setOptions([/* ... */]);
+        dd(
+            $_ENV['COINMARKETCAP']
+        );
         return $this->render('crypto/index.html.twig', [
             'cryptos' => $cryptoRepository->findAll(),
             'total' => $this->get_total(),
@@ -201,7 +204,6 @@ class CryptoController extends AbstractController
         curl_close($curl); // Close request
         //get all for amount of day
         $total = 0;
-
         $data = $resultats['data'];
         foreach ($this->cryptoRepository->findAll() as $symbol) {
             $valeur_actuelle = $data[$symbol->getSymbol()]['quote']['EUR']['price'];
