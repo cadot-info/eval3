@@ -201,12 +201,14 @@ class CryptoController extends AbstractController
         curl_close($curl); // Close request
         //get all for amount of day
         $total = 0;
-        $data = $resultats['data'];
-        foreach ($this->cryptoRepository->findAll() as $symbol) {
-            $valeur_actuelle = $data[$symbol->getSymbol()]['quote']['EUR']['price'];
-            $total +=   $symbol->getQuantite() * ($valeur_actuelle - $symbol->getPrixAchat());
+        if (isset($resultats['data'])) {
+            $data = $resultats['data'];
+            foreach ($this->cryptoRepository->findAll() as $symbol) {
+                $valeur_actuelle = $data[$symbol->getSymbol()]['quote']['EUR']['price'];
+                $total +=   $symbol->getQuantite() * ($valeur_actuelle - $symbol->getPrixAchat());
+            }
+            $resultats['total'] = $total;
+            return $resultats;
         }
-        $resultats['total'] = $total;
-        return $resultats;
     }
 }
