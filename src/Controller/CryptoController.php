@@ -54,9 +54,6 @@ class CryptoController extends AbstractController
         ]);
 
         $chart->setOptions([/* ... */]);
-        dd(
-            $_ENV['COINMARKETCAP']
-        );
         return $this->render('crypto/index.html.twig', [
             'cryptos' => $cryptoRepository->findAll(),
             'total' => $this->get_total(),
