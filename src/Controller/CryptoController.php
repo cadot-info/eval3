@@ -54,9 +54,16 @@ class CryptoController extends AbstractController
         ]);
 
         $chart->setOptions([/* ... */]);
+        try {
+            $total = $this->get_total();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+
         return $this->render('crypto/index.html.twig', [
             'cryptos' => $cryptoRepository->findAll(),
-            'total' => $this->get_total(),
+            'total' => $total,
             'chart' => $chart,
         ]);
     }
