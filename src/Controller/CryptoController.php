@@ -209,6 +209,6 @@ class CryptoController extends AbstractController
             }
             $resultats['total'] = $total;
             return $resultats;
-        }
+        } else return 0;
     }
 }
