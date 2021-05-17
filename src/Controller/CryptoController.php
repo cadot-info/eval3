@@ -198,7 +198,6 @@ class CryptoController extends AbstractController
 
         $response = curl_exec($curl); // Send the request, save the response
         $resultats = json_decode($response, true);
-        dd($resultats);
         curl_close($curl); // Close request
         //get all for amount of day
         $total = 0;
