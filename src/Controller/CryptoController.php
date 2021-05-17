@@ -54,16 +54,9 @@ class CryptoController extends AbstractController
         ]);
 
         $chart->setOptions([/* ... */]);
-        try {
-            $total = $this->get_total();
-        } catch (\Throwable $th) {
-            throw $th;
-        }
-
-
         return $this->render('crypto/index.html.twig', [
             'cryptos' => $cryptoRepository->findAll(),
-            'total' => $total,
+            'total' => $this->get_total(),
             'chart' => $chart,
         ]);
     }
@@ -205,6 +198,7 @@ class CryptoController extends AbstractController
 
         $response = curl_exec($curl); // Send the request, save the response
         $resultats = json_decode($response, true);
+        dd($resultats);
         curl_close($curl); // Close request
         //get all for amount of day
         $total = 0;
