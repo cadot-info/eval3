@@ -14,8 +14,7 @@ class CryptoType extends AbstractType
         $builder
             ->add('symbol')
             ->add('quantite')
-            ->add('prix_achat')
-        ;
+            ->add('prix_achat');
     }
 
     public function configureOptions(OptionsResolver $resolver)

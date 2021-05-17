@@ -70,7 +70,7 @@ class CryptoController extends AbstractController
         $form = $this->createForm(CryptoType::class, $crypto);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($crypto);
             $entityManager->flush();
@@ -125,7 +125,7 @@ class CryptoController extends AbstractController
         $form = $this->createForm(CryptoType::class, $crypto);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('crypto_index');

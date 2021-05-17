@@ -21,7 +21,45 @@ app.request.attributes.get('_route_params'))|split('/')|last
 {{ form_start(form) }}
 <div class="row mt-5">
     <div class="col-12 mt-5">
-        {{ form_widget(form.symbol,{'attr':{'placeholder':'Sélectionner une crpto','class':'input-add'}}) }}
+        {% set vals=[
+        "BTC", "ETH", "BNB", "ADA", "DOGE", "XRP", "DOT", "ICP", "BCH", "LTC", "XLM", "SOL", "VET", "ETC", "THETA",
+        "EOS",
+        "TRX", "FIL", "XMR", "NEO", "LUNA", "KLAY", "BSV", "MIOTA", "KSM", "ATOM", "XTZ", "AVAX", "ALGO", "DASH",
+        "WAVES",
+        "ZEC", "EGLD", "XEM", "HBAR", "DCR", "NEAR", "UST", "ZIL", "TFUEL", "QTUM", "STX", "FTM", "BTG", "DGB", "ONT",
+        "NANO",
+        "ONE", "ZEN", "SC", "CELO", "ICX", "HNT", "RVN", "IOST", "AR", "BCD", "XVG", "FLOW", "LSK", "CKB", "MDX", "SRM",
+        "EWT",
+        "ERG", "STRAX", "ARDR", "NKN", "IOTX", "ABBC", "BTS", "STEEM", "WAXP", "WAN", "KMD", "COTI", "XHV", "VLX",
+        "MED", "BTM",
+        "PHA", "KIN", "SYS", "HIVE", "CTC", "CCXX", "DFI", "ARRR", "XWC", "XDC", "RPD", "BCHA", "ETN", "HNC", "AKT",
+        "CSC",
+        "REV", "DIVI", "ARK", "RDD", "AION", "HNS", "SCRT", "HTR", "ROSE", "MONA", "PAC", "META", "TOMO", "MARO",
+        "FIRO", "BCN",
+        "IRIS", "CRU", "NYE", "SAPP", "ELA", "BEAM", "LTO", "FSN", "EDG", "KDA", "NRG", "VRA", "WICC", "DAG", "PIVX",
+        "AE",
+        "PPC", "EOSC", "VRSC", "GRN", "TT", "CTK", "SERO", "XNC", "CET", "MWC", "PCX", "APL", "NXS", "NULS", "GRS",
+        "CENNZ",
+        "ZNN", "VITE", "GXC", "VTC", "DERO", "CTXC", "RBTC", "OXEN", "HC", "EMC2", "NXT", "VSYS", "LBC", "AXEL", "NIM",
+        "FIO",
+        "RAD", "UBX", "MHC", "MASS", "BAN", "PZM", "BDX", "BURST", "GO", "NAS", "SKY", "GRIN", "GBYTE", "PAI", "BIP",
+        "KRT",
+        "DMCH", "NEBL", "OBSR", "SBD", "FLUX", "WOW", "XSN", "CLO", "AQT", "NAV", "PI", "LCC", "TRTL", "VAL", "VIA",
+        "TRIAS",
+        "ZANO", "VITAE", "XDN", "IFC", "FIS", "QRL", "RINGX", "DYN"
+        ] %}
+        <div class="form-group">
+            <label for="my-select">Sélectionnez une crypto</label>
+            <select id="crypto_symbol" name="crypto[symbol]" class="input-add">
+                {% for row in vals %}
+                {% if form.vars.data.symbol==row %}
+                <option selected="selected">
+                    {% else %}
+                <option>
+                    {% endif %}{{row}}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="col-12 mt-5">
         {{ form_widget(form.quantite,{'attr':{'placeholder':'Quantité','class':'input-add'}}) }}
@@ -44,8 +82,8 @@ app.request.attributes.get('_route_params'))|split('/')|last
     </div>
 </div>
 
-
-{{ form_end(form) }}
+<input type="hidden" name="token" value="{{ csrf_token('crypto_new') }}" />
+{{ form_end(form, {'render_rest': false}) }}
 
 
 

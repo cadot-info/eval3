@@ -28,8 +28,7 @@
         </button>
     </div>
 </div>
- {{ form_widget(form.prix_achat,{'attr':{'hidden':true}}) }}
- <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ crypto.id) }}">
+{{ form_widget(form.prix_achat,{'attr':{'hidden':true}}) }}
 
 {{ form_end(form) }}
 
